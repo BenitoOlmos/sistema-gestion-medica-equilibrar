@@ -6,8 +6,11 @@ import { getStatusLabel } from '@/lib/data';
 const HOURS = Array.from({ length: 13 }, (_, i) => i + 8); // 8:00 to 20:00
 const DAYS = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
 
-export default function Calendar({ events, onSlotClick, onEventClick, title, specialistColors }) {
+export default function Calendar({ events, onSlotClick, onEventClick, title, specialistColors, userRole }) {
     const [currentDate, setCurrentDate] = useState(new Date()); // Defaults to today (2026-01-27)
+
+    // Check if user can see financial information (Admin/Coordinator only)
+    const canSeeFinancials = userRole && ['ADMINISTRADOR', 'COORDINADOR', 'COORDINADORA'].includes(userRole.toUpperCase().trim());
 
     // Helper to get start of the week (Monday)
     const getStartOfWeek = (d) => {
@@ -171,7 +174,7 @@ export default function Calendar({ events, onSlotClick, onEventClick, title, spe
                                                     </div>
                                                     {event.ID_ESTADO !== 3 && event.ID_CLIENTE !== 'SYSTEM' && (
                                                         <div style={{ color: 'var(--slate-600)', fontSize: '0.65rem', marginLeft: '10px' }}>
-                                                            {status.label} • ${Number(event.TOTAL).toLocaleString('es-ES')}
+                                                            {status.label}{canSeeFinancials ? ` • $${Number(event.TOTAL).toLocaleString('es-ES')}` : ''}
                                                         </div>
                                                     )}
                                                 </div>

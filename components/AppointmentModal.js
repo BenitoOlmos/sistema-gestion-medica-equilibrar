@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 
-export default function AppointmentModal({ isOpen, onClose, onSubmit, onDelete, initialData, clients, specialists, services, readOnly }) {
+export default function AppointmentModal({ isOpen, onClose, onSubmit, onDelete, initialData, clients, specialists, services, readOnly, userRole }) {
     const [formData, setFormData] = useState({
         clientId: '',
         specialistId: '',
@@ -62,6 +62,9 @@ export default function AppointmentModal({ isOpen, onClose, onSubmit, onDelete, 
     // Professionals can only edit if they are creating a NEW BLOCK (SYSTEM)
     // or if they are NOT in readOnly mode (Admin/Coord)
     const isLocked = readOnly && initialData?.ID_ATENCION;
+
+    // Check if user can see financial information (Admin/Coordinator only)
+    const canSeeFinancials = userRole && ['ADMINISTRADOR', 'COORDINADOR', 'COORDINADORA'].includes(userRole.toUpperCase().trim());
 
     return (
         <div style={{
@@ -153,24 +156,28 @@ export default function AppointmentModal({ isOpen, onClose, onSubmit, onDelete, 
                         >
                             <option value="">{initialData?.ID_ATENCION ? 'Mantener anterior' : 'Seleccionar Servicio...'}</option>
                             {services.map(s => (
-                                <option key={s.ID_SERVICIO} value={s.ID_SERVICIO}>{s.NOMBRE} - $ {Number(s.PRECIO).toLocaleString('es-ES')}</option>
+                                <option key={s.ID_SERVICIO} value={s.ID_SERVICIO}>
+                                    {s.NOMBRE}{canSeeFinancials ? ` - $ ${Number(s.PRECIO).toLocaleString('es-ES')}` : ''}
+                                </option>
                             ))}
                         </select>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
-                        <div>
-                            <label style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.25rem', display: 'block' }}>Método de Pago</label>
-                            <select
-                                className="input"
-                                value={formData.paymentMethod}
-                                onChange={e => setFormData({ ...formData, paymentMethod: e.target.value })}
-                                disabled={isLocked}
-                            >
-                                <option value="Presencial">Presencial</option>
-                                <option value="Online">Online / Transferencia</option>
-                            </select>
-                        </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: canSeeFinancials ? 'repeat(auto-fit, minmax(200px, 1fr))' : '1fr', gap: '1rem', marginBottom: '1.5rem' }}>
+                        {canSeeFinancials && (
+                            <div>
+                                <label style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.25rem', display: 'block' }}>Método de Pago</label>
+                                <select
+                                    className="input"
+                                    value={formData.paymentMethod}
+                                    onChange={e => setFormData({ ...formData, paymentMethod: e.target.value })}
+                                    disabled={isLocked}
+                                >
+                                    <option value="Presencial">Presencial</option>
+                                    <option value="Online">Online / Transferencia</option>
+                                </select>
+                            </div>
+                        )}
                         <div>
                             <label style={{ fontSize: '0.875rem', fontWeight: 500, marginBottom: '0.25rem', display: 'block' }}>Estado</label>
                             <select
@@ -200,7 +207,7 @@ export default function AppointmentModal({ isOpen, onClose, onSubmit, onDelete, 
                         />
                     </div>
 
-                    {price > 0 && (
+                    {canSeeFinancials && price > 0 && (
                         <div style={{ padding: '1rem', background: 'var(--slate-50)', borderRadius: '0.5rem', marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <span style={{ fontWeight: 600, color: 'var(--slate-600)' }}>Total</span>
                             <span style={{ fontWeight: 700, fontSize: '1.25rem', color: 'var(--primary-600)' }}>$ {price.toLocaleString('es-ES')}</span>

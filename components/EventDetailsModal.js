@@ -1,8 +1,11 @@
 'use client';
 import { X, Phone, User, Calendar as CalIcon, Clock, Stethoscope } from 'lucide-react';
 
-export default function EventDetailsModal({ isOpen, onClose, event, client, specialist }) {
+export default function EventDetailsModal({ isOpen, onClose, event, client, specialist, userRole }) {
     if (!isOpen || !event) return null;
+
+    // Check if user can see financial information (Admin/Coordinator only)
+    const canSeeFinancials = userRole && ['ADMINISTRADOR', 'COORDINADOR', 'COORDINADORA'].includes(userRole.toUpperCase().trim());
 
     return (
         <div style={{
@@ -53,13 +56,15 @@ export default function EventDetailsModal({ isOpen, onClose, event, client, spec
                         </div>
                     </div>
 
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', justifyContent: canSeeFinancials ? 'space-between' : 'flex-start', alignItems: 'center' }}>
                         <span className={`badge badge-${event.ID_ESTADO === 1 ? 'success' : event.ID_ESTADO === 2 ? 'danger' : 'neutral'}`}>
                             {event.ID_ESTADO === 1 ? 'Realizada' : event.ID_ESTADO === 2 ? 'Cancelada' : 'Bloqueada/Pendiente'}
                         </span>
-                        <span style={{ fontWeight: 700, fontSize: '1.25rem', color: 'var(--slate-700)' }}>
-                            ${event.TOTAL.toLocaleString()}
-                        </span>
+                        {canSeeFinancials && (
+                            <span style={{ fontWeight: 700, fontSize: '1.25rem', color: 'var(--slate-700)' }}>
+                                ${event.TOTAL.toLocaleString()}
+                            </span>
+                        )}
                     </div>
                 </div>
 

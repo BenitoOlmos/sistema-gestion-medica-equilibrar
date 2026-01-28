@@ -130,6 +130,7 @@ export default function CoordinatorDashboard() {
                     onSlotClick={handleSlotClick}
                     onEventClick={handleEventClick}
                     specialistColors={specialistColors}
+                    userRole={user.role}
                 />
             </div>
 
@@ -142,6 +143,7 @@ export default function CoordinatorDashboard() {
                 clients={data.DB_CLIENTES}
                 specialists={data.DB_CONFIG_EQUIPO}
                 services={data.DB_SERVICIOS}
+                userRole={user.role}
             />
         </div>
     );

@@ -1,0 +1,5 @@
+{
+    "name": "sistema-gestion-medica-equilibrar",
+    "description": "Sistema de Gestión Médica Equilibrar - Aplicación Next.js con integración a Google Sheets para gestión de citas, pacientes y equipo médico",
+    "private": false
+}

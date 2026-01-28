@@ -111,6 +111,7 @@ export default function ProfessionalDashboard() {
                     title="Mi Disponibilidad"
                     onSlotClick={handleSlotClick}
                     onEventClick={handleEventClick}
+                    userRole={user.role}
                 />
             </div>
 
@@ -124,6 +125,7 @@ export default function ProfessionalDashboard() {
                 specialists={data.DB_CONFIG_EQUIPO}
                 services={data.DB_SERVICIOS}
                 readOnly={true}
+                userRole={user.role}
             />
         </div>
     );
