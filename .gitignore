@@ -67,3 +67,13 @@ ENV/
 # Temporary files
 temp_repo.json
 *.tmp
+
+# =====================================================
+# BACKEND (Express.js)
+# =====================================================
+
+# Backend dependencies
+/backend/node_modules/
+/backend/.env
+/backend/dist/
+/backend/coverage/
