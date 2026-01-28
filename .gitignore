@@ -35,3 +35,35 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# =====================================================
+# MIGRATION FILES (Sensitive Data)
+# =====================================================
+
+# CSV exports (contienen datos de pacientes)
+/csv_exports/
+*.csv
+
+# Database backups
+*.sql.backup
+*.sql.bak
+backup_*.sql
+
+# Migration logs
+migration.log
+migration_*.log
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# Temporary files
+temp_repo.json
+*.tmp
